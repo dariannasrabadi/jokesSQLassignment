@@ -29,6 +29,12 @@ function onReady() {
         }
     });
 
+    $('#selectAuthorDropdown').on('change', function() {
+        let value = $(this).val();
+        if (value !== 'null') {
+            getJokesFrom(value);
+        }
+    });
 
     getJokes();
 
@@ -85,6 +91,7 @@ function getAuthors() {
         method: 'GET',
         url: '/jokes/authors',
         success: function(response) {
+            $('#selectAuthorDropdown').append('<option value="null">Sort by Author</option>');
             for (let i = 0; i < response.length; i++) {
                 $('#selectAuthorDropdown').append(`<option value="${response[i].id}">${response[i].whosejoke}</option>`);
             }
@@ -107,7 +114,8 @@ function getJokesFrom(name) {
         method: 'GET',
         url: '/jokes/whose/' + name,
         success: function(response) {
-            console.log('jokes from '+name+': ', response);            
+            console.log('jokes from '+name+': ', response);
+            displayAllJokes(response);            
         }
     });
 }

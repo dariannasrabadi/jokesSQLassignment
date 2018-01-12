@@ -2,6 +2,24 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../modules/pool');
 
+
+router.get('/authors', (req, res) => {
+    console.log('in authors');
+    const queryText = `SELECT * FROM authors`;
+    pool.query(queryText)
+    // runs on successful query
+    .then((result) => {
+        console.log('query results: ', result);            
+        res.send(result.rows);
+    })
+    // error handling
+    .catch((err) => {
+        console.log('error making auhtors select query:', err);
+        res.sendStatus(500);
+    });
+});
+
+
 //GET - only one joke
 router.get('/:id', (req,res) => {
     console.log('ID from request: ', req.params.id);
@@ -39,6 +57,7 @@ router.get('/whose/:name', (req, res) => {
         res.sendStatus(500);
     });
 });
+
 
 router.get('/', (req, res) => {
     // query DB

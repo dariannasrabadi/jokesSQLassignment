@@ -77,6 +77,19 @@ function getJokes() {
         url: '/jokes',
         success: displayAllJokes         
     });
+    getAuthors();
+}
+
+function getAuthors() {
+    $.ajax({
+        method: 'GET',
+        url: '/jokes/authors',
+        success: function(response) {
+            for (let i = 0; i < response.length; i++) {
+                $('#selectAuthorDropdown').append(`<option value="${response[i].id}">${response[i].whosejoke}</option>`);
+            }
+        }
+    });
 }
 
 function getJoke(jokeId) {

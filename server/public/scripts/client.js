@@ -30,13 +30,15 @@ function onReady() {
     });
 
     $('#selectAuthorDropdown').on('change', function() {
-        let value = $(this).val();
+        let value = $(selectAuthorDropdown).val();
         if (value !== 'null') {
-            getJokesFrom(value);
+            selectAll(value);
         }
     });
 
     $('#resultsOption').on('change', selectAll);
+
+
 
     getJokes();
 
@@ -102,11 +104,11 @@ function getAuthors() {
     });
 }
 
-function selectAll() {
-    let display = $(this).val();
+function selectAll(name) {
+    let display = $('#resultsOption').val();
     $.ajax({
         method: 'GET',
-        url: '/jokes/display/' + display,
+        url: '/jokes/display/' + display + '/whose/' + name,
         success: displayAllJokes         
     });
     getAuthors();
@@ -123,16 +125,16 @@ function getJoke(jokeId) {
     });
 }
 
-function getJokesFrom(name) {
-    $.ajax({
-        method: 'GET',
-        url: '/jokes/whose/' + name,
-        success: function(response) {
-            console.log('jokes from '+name+': ', response);
-            displayAllJokes(response);            
-        }
-    });
-}
+// function getJokesFrom(name) {
+//     $.ajax({
+//         method: 'GET',
+//         url: '/jokes/whose/' + name,
+//         success: function(response) {
+//             console.log('jokes from '+name+': ', response);
+//             displayAllJokes(response);            
+//         }
+//     });
+// }
 
 function updateFunniness(id, newFunniness){
     $.ajax({

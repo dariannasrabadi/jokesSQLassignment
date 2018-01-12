@@ -135,25 +135,47 @@ router.put('/:id', (req,res) => {
 });
 
 
-router.get('/display/:display', (req, res) => {
-    // query DB
+router.get('/display/:display/whose/:name', (req, res) => {
+console.log('WE ARE IN /display/:display/whose/:name');
     let queryText; 
+    console.log('REQ PARAMS DISPLAY AND NAME IN ORDER: ', req.params );
     if (req.params.display == 5) {
+        if (req.params.name != '') {
+        queryText = `SELECT jokes.id, authors.whosejoke, jokes.jokequestion, jokes.punchline, jokes.funniness
+            FROM
+                jokes
+                JOIN authors ON jokes.authors_id = authors.id
+            WHERE authors_id=$1
+            LIMIT 5
+            ORDER BY jokes.id;`
+        }
+        else {
          queryText = `SELECT jokes.id, authors.whosejoke, jokes.jokequestion, jokes.punchline, jokes.funniness
     FROM
         jokes
         JOIN authors ON jokes.authors_id = authors.id
         ORDER BY jokes.id
         LIMIT 5;`;
+        }
     }
     else {
+        if (req.params.name != '') {
+        queryText = `SELECT jokes.id, authors.whosejoke, jokes.jokequestion, jokes.punchline, jokes.funniness
+            FROM
+                jokes
+                JOIN authors ON jokes.authors_id = authors.id
+            WHERE authors_id=$1
+            ORDER BY jokes.id;`
+        }
+        else {
         queryText = `SELECT jokes.id, authors.whosejoke, jokes.jokequestion, jokes.punchline, jokes.funniness
     FROM
         jokes
         JOIN authors ON jokes.authors_id = authors.id
-        ORDER BY jokes.id;`;
+        ORDER BY jokes.id;`
+        };
     }
-    pool.query(queryText)
+    pool.query(queryText, [req.params.name])
         // runs on successful query
         .then((result) => {
             console.log('query results: ', result.rows);            

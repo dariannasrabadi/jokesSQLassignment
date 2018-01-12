@@ -134,4 +134,36 @@ router.put('/:id', (req,res) => {
         });
 });
 
+
+router.get('/display/:display', (req, res) => {
+    // query DB
+    let queryText; 
+    if (req.params.display == 5) {
+         queryText = `SELECT jokes.id, authors.whosejoke, jokes.jokequestion, jokes.punchline, jokes.funniness
+    FROM
+        jokes
+        JOIN authors ON jokes.authors_id = authors.id
+        ORDER BY jokes.id
+        LIMIT 5;`;
+    }
+    else {
+        queryText = `SELECT jokes.id, authors.whosejoke, jokes.jokequestion, jokes.punchline, jokes.funniness
+    FROM
+        jokes
+        JOIN authors ON jokes.authors_id = authors.id
+        ORDER BY jokes.id;`;
+    }
+    pool.query(queryText)
+        // runs on successful query
+        .then((result) => {
+            console.log('query results: ', result.rows);            
+            res.send(result.rows);
+        })
+        // error handling
+        .catch((err) => {
+            console.log('error making select query:', err);
+            res.sendStatus(504);
+        });
+});
+
 module.exports = router;

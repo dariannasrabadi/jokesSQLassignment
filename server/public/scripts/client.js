@@ -36,6 +36,8 @@ function onReady() {
         }
     });
 
+    $('#resultsOption').on('change', selectAll);
+
     getJokes();
 
     //getJoke(1);
@@ -91,6 +93,7 @@ function getAuthors() {
         method: 'GET',
         url: '/jokes/authors',
         success: function(response) {
+            $('#selectAuthorDropdown').empty();
             $('#selectAuthorDropdown').append('<option value="null">Sort by Author</option>');
             for (let i = 0; i < response.length; i++) {
                 $('#selectAuthorDropdown').append(`<option value="${response[i].id}">${response[i].whosejoke}</option>`);
@@ -98,6 +101,17 @@ function getAuthors() {
         }
     });
 }
+
+function selectAll() {
+    let display = $(this).val();
+    $.ajax({
+        method: 'GET',
+        url: '/jokes/display/' + display,
+        success: displayAllJokes         
+    });
+    getAuthors();
+}
+
 
 function getJoke(jokeId) {
     $.ajax({

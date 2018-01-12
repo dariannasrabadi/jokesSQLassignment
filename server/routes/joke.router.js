@@ -21,11 +21,12 @@ router.get('/:id', (req,res) => {
 });
 
 router.get('/whose/:name', (req, res) => {
-    const queryText = `SELECT *
+    const queryText = `SELECT jokes.id, authors.whosejoke, jokes.jokequestion, jokes.punchline, jokes.funniness
     FROM
         jokes
-        JOIN authors ON jokes.whosejoke = authors.id
-    WHERE whosejoke=$1`;
+        JOIN authors ON jokes.authors_id = authors.id
+    WHERE authors_id=$1
+    ORDER BY jokes.id;`;
     pool.query(queryText, [req.params.name])
     // runs on successful query
     .then((result) => {
@@ -41,11 +42,15 @@ router.get('/whose/:name', (req, res) => {
 
 router.get('/', (req, res) => {
     // query DB
-    const queryText = 'SELECT * FROM jokes';
+    const queryText = `SELECT jokes.id, authors.whosejoke, jokes.jokequestion, jokes.punchline, jokes.funniness
+    FROM
+        jokes
+        JOIN authors ON jokes.authors_id = authors.id
+        ORDER BY jokes.id;`;
     pool.query(queryText)
         // runs on successful query
         .then((result) => {
-            console.log('query results: ', result);            
+            console.log('query results: ', result.rows);            
             res.send(result.rows);
         })
         // error handling
@@ -59,9 +64,9 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
     console.log('req.body: ', req.body);
-    const queryText = 'INSERT INTO jokes(whosejoke, jokequestion, punchline, funniness) VALUES ($1, $2, $3, $4)';
+    const queryText = 'INSERT INTO jokes(authors_id, jokequestion, punchline, funniness) VALUES ($1, $2, $3, $4)';
     // use prepared statements!!!!!!!!!
-    pool.query(queryText,[req.body.whoseJoke, req.body.jokeQuestion, req.body.punchLine, req.body.funniness])
+    pool.query(queryText,[1, req.body.jokeQuestion, req.body.punchLine, req.body.funniness]) // TODO: hardcoded 1 for an int for authors_id
         .then((result) => {
         console.log('query results: ', result);
         res.sendStatus(201);

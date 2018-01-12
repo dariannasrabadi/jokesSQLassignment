@@ -117,7 +117,7 @@ function deleteJoke(id){
         method: 'DELETE',
         url: '/jokes/' + id,
         success: function(response) {
-            console.log('update funniness response: ', response); 
+            console.log('delete joke: ', response); 
             getJokes();           
         }
     });

@@ -38,25 +38,25 @@ router.get('/:id', (req,res) => {
         });
 });
 
-router.get('/whose/:name', (req, res) => {
-    const queryText = `SELECT jokes.id, authors.whosejoke, jokes.jokequestion, jokes.punchline, jokes.funniness
-    FROM
-        jokes
-        JOIN authors ON jokes.authors_id = authors.id
-    WHERE authors_id=$1
-    ORDER BY jokes.id;`;
-    pool.query(queryText, [req.params.name])
-    // runs on successful query
-    .then((result) => {
-        console.log('query results: ', result);            
-        res.send(result.rows);
-    })
-    // error handling
-    .catch((err) => {
-        console.log('error making select query:', err);
-        res.sendStatus(500);
-    });
-});
+// router.get('/whose/:name', (req, res) => {
+//     const queryText = `SELECT jokes.id, authors.whosejoke, jokes.jokequestion, jokes.punchline, jokes.funniness
+//     FROM
+//         jokes
+//         JOIN authors ON jokes.authors_id = authors.id
+//     WHERE authors_id=$1
+//     ORDER BY jokes.id;`;
+//     pool.query(queryText, [req.params.name])
+//     // runs on successful query
+//     .then((result) => {
+//         console.log('query results: ', result);            
+//         res.send(result.rows);
+//     })
+//     // error handling
+//     .catch((err) => {
+//         console.log('error making select query:', err);
+//         res.sendStatus(500);
+//     });
+// });
 
 
 router.get('/', (req, res) => {
@@ -141,13 +141,13 @@ console.log('WE ARE IN /display/:display/whose/:name');
     console.log('REQ PARAMS DISPLAY AND NAME IN ORDER: ', req.params );
     if (req.params.display == 5) {
         if (req.params.name != '') {
-        queryText = `SELECT jokes.id, authors.whosejoke, jokes.jokequestion, jokes.punchline, jokes.funniness
+         queryText = `SELECT jokes.id, authors.whosejoke, jokes.jokequestion, jokes.punchline, jokes.funniness
             FROM
                 jokes
                 JOIN authors ON jokes.authors_id = authors.id
             WHERE authors_id=$1
-            LIMIT 5
-            ORDER BY jokes.id;`
+            ORDER BY jokes.id
+            LIMIT 5;`
         }
         else {
          queryText = `SELECT jokes.id, authors.whosejoke, jokes.jokequestion, jokes.punchline, jokes.funniness
